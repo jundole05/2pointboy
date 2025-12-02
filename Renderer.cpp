@@ -131,6 +131,16 @@ glm::mat4 Renderer::model = glm::mat4(1.0f);
 glm::mat4 Renderer::trans;
 glm::mat4 Renderer::rot = glm::mat4(1.0f);
 
+// 뷰포트용 추가
+glm::mat4 Renderer::topDownCamera = glm::lookAt(
+    glm::vec3(0, 20, 0), // 위에서 아래로 보는 위치
+    glm::vec3(0, 0, 0), // 중심점
+    glm::vec3(0, 0, -1) // Up벡터
+);
+glm::mat4 Renderer::topDownProj = glm::ortho(-8.0f, 8.0f, -8.0f, 8.0f, 0.1f, 100.0f);
+
+glm::mat4 Renderer::topDownTrans;
+
 void Renderer::InitBuffer()
 {
     glGenVertexArrays(1, &VAO_preview);
@@ -236,16 +246,51 @@ void Renderer::drawScene()
     glEnable(GL_DEPTH_TEST);
     glUseProgram(shaderID);
 
+    //기본뷰포트
+    int windowWidth = glutGet(GLUT_WINDOW_WIDTH);
+    int windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
+    glViewport(0, 0, windowWidth, windowHeight);
+
     trans = proj * camera * model;
-  MatrixID = glGetUniformLocation(shaderID, "trans");
-  glUniformMatrix4fv(MatrixID, 1, FALSE, glm::value_ptr(trans));
+    MatrixID = glGetUniformLocation(shaderID, "trans");
+    glUniformMatrix4fv(MatrixID, 1, FALSE, glm::value_ptr(trans));
 
     drawBackground();
-drawGameSpace();
+    drawGameSpace();
+    drawPreview();
+    drawOutBlocks();
+    
+    // 추가 뷰포트
+    drawTopDownViewport(windowWidth, windowHeight);
+
+    glutSwapBuffers();
+}
+
+void Renderer::drawTopDownViewport(int windowWidth, int windowHeight)
+{
+    // 오른쪽 위 1/4 크기 뷰포트 설정
+    int vpWidth = windowWidth / 4;
+    int vpHeight = windowHeight / 4;
+    int vpX = windowWidth - vpWidth - 10;  // 오른쪽에서 10px 여백
+    int vpY = windowHeight - vpHeight - 10; // 위에서 10px 여백
+
+    glViewport(vpX, vpY, vpWidth, vpHeight);
+
+    // Top-down 카메라로 변환 행렬 설정
+    topDownTrans = topDownProj * topDownCamera;
+    glUniformMatrix4fv(MatrixID, 1, FALSE, glm::value_ptr(topDownTrans));
+
+    // 뷰포트 테두리 그리기 (선택사항)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    // 씬 다시 그리기
+    drawBackground();
+    drawGameSpace();
     drawPreview();
     drawOutBlocks();
 
-    glutSwapBuffers();
+    // 원래 폴리곤 모드로 복원
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void Renderer::drawBackground()
@@ -581,4 +626,10 @@ if (GameState::out[z] > 0)
 void Renderer::Reshape(int w, int h)
 {
 glViewport(0, 0, w, h);
+// 메인 프로젝션 업데이트
+proj = glm::perspective(glm::radians(45.0f), (float)w / (float)h, 0.1f, 100.0f);
+
+// Top-down 프로젝션도 비율에 맞게 업데이트 (선택사항)
+float aspect = (float)w / (float)h;
+topDownProj = glm::ortho(-8.0f * aspect, 8.0f * aspect, -8.0f, 8.0f, 0.1f, 100.0f);
 }

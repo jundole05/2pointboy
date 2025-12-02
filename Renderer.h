@@ -27,7 +27,7 @@ public:
     static GLfloat squareColor[24][3];
     static GLfloat originColor[24][3];
     static GLfloat outPosition[24][3];
-  static GLfloat outColor[24][3];
+    static GLfloat outColor[24][3];
     static GLfloat top[4][3];
     static GLfloat bottom[4][3];
     static GLfloat pvColor[4][3];
@@ -39,10 +39,17 @@ public:
     static glm::mat4 model;
     static glm::mat4 trans;
     static glm::mat4 rot;
+
+    // 추가뷰포트용 변수
+    static glm::mat4 topDownCamera;
+    static glm::mat4 topDownProj;
+    static glm::mat4 topDownTrans;
+    static void drawTopDownViewport(int windowWidth, int windowHeight);
     
     static void InitBuffer();
-  static void drawScene();
+    static void drawScene();
     static void Reshape(int w, int h);
+
     
 private:
     static void drawBackground();
