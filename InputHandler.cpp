@@ -5,6 +5,61 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+// 정적 변수 초기화 추가
+bool InputHandler::isDragging = false;
+int InputHandler::lastMouseX = 0;
+int InputHandler::lastMouseY = 0;
+
+// 마우스 버튼 콜백
+void InputHandler::Mouse(int button, int state, int x, int y)
+{
+    if (button == GLUT_LEFT_BUTTON)
+    {
+        if (state == GLUT_DOWN)
+        {
+            isDragging = true;
+            lastMouseX = x;
+            lastMouseY = y;
+        }
+        else if (state == GLUT_UP)
+        {
+            isDragging = false;
+        }
+    }
+}
+
+// 마우스 드래그 콜백
+void InputHandler::Motion(int x, int y)
+{
+    if (isDragging)
+    {
+        // 마우스 이동량 계산
+        int deltaX = x - lastMouseX;
+        int deltaY = y - lastMouseY;
+
+        // 카메라 회전 각도 업데이트 (감도 조절)
+        float sensitivity = 0.5f;
+        Renderer::cameraYaw -= deltaX * sensitivity;
+        Renderer::cameraPitch += deltaY * sensitivity;
+
+        // Pitch 각도 제한 (위아래 회전 제한)
+        if (Renderer::cameraPitch > 89.0f)
+            Renderer::cameraPitch = 89.0f;
+        if (Renderer::cameraPitch < -89.0f)
+            Renderer::cameraPitch = -89.0f;
+
+        // 카메라 업데이트
+        Renderer::updateCamera();
+
+        // 마지막 마우스 위치 업데이트
+        lastMouseX = x;
+        lastMouseY = y;
+
+        glutPostRedisplay();
+    }
+
+}
+
 void InputHandler::Keyboard(unsigned char key, int x, int y)
 {
     switch (key)

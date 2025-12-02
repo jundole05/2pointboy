@@ -56,6 +56,9 @@ std::cerr << "GLEW 초기화 불가능" << std::endl;
     glutDisplayFunc(Renderer::drawScene);
     glutReshapeFunc(Renderer::Reshape);
     glutKeyboardFunc(InputHandler::Keyboard);
+    // 추가: 마우스 콜백 등록
+    glutMouseFunc(InputHandler::Mouse);
+    glutMotionFunc(InputHandler::Motion);
     glutTimerFunc(30, GameLoop, 1);
     
     ShaderManager::vertexShaderSource = filetobuf("vertex1.glsl");

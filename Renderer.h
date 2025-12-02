@@ -60,6 +60,11 @@ public:
     static void drawText(float x, float y, const char* text);
     static void drawGameInfo();
 
+    // 카메라 회전 관련
+    static float cameraYaw;    // 좌우 회전 (Y축)
+    static float cameraPitch;  // 상하 회전 (X축)
+    static float cameraDistance; // 카메라 거리
+    static void updateCamera();
     
 private:
     static void drawBackground();

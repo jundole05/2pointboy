@@ -131,6 +131,12 @@ glm::mat4 Renderer::model = glm::mat4(1.0f);
 glm::mat4 Renderer::trans;
 glm::mat4 Renderer::rot = glm::mat4(1.0f);
 
+// 카메라 회전 관련 변수 초기화 추가
+
+float Renderer::cameraYaw = 45.0f;      // 초기 Yaw 각도
+float Renderer::cameraPitch = 30.0f;    // 초기 Pitch 각도
+float Renderer::cameraDistance = 27.0f; 
+
 // 뷰포트용 추가
 glm::mat4 Renderer::topDownCamera = glm::lookAt(
     glm::vec3(0, 20, 0), // 위에서 아래로 보는 위치
@@ -725,6 +731,22 @@ void Renderer::drawGameInfo()
     // 점수 표시
     sprintf(buffer, "Score : % d pt", GameState::score);
     drawText(10, windowHeight - 60, buffer);
+}
+
+// 카메라 업데이트 함수 추가
+void Renderer::updateCamera()
+{
+    // 구면 좌표계를 사용하여 카메라 위치 계산
+    float yawRad = glm::radians(cameraYaw);
+    float pitchRad = glm::radians(cameraPitch);
+
+    glm::vec3 cameraPos;
+    cameraPos.x = cameraDistance * cos(pitchRad) * sin(yawRad);
+    cameraPos.y = cameraDistance * sin(pitchRad);
+    cameraPos.z = cameraDistance * cos(pitchRad) * cos(yawRad);
+
+    // 카메라 행렬 업데이트
+    camera = glm::lookAt(cameraPos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 }
 
 void Renderer::Reshape(int w, int h)
