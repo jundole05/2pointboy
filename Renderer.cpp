@@ -1,7 +1,7 @@
 #include "Renderer.h"
 #include "GameState.h"
-#include <ext.hpp>
-#include <gtc/matrix_transform.hpp>
+#include <glm/ext.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 // 정적 변수 초기화
 GLuint Renderer::VAO[12][12][12];

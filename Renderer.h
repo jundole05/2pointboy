@@ -1,7 +1,7 @@
 #pragma once
 #include <gl/glew.h>
 #include <gl/freeglut.h>
-#include <glm.hpp>
+#include <glm/glm.hpp>
 
 class Renderer {
 public:

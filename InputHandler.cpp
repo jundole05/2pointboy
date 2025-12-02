@@ -2,8 +2,8 @@
 #include "GameState.h"
 #include "Renderer.h"
 #include <gl/freeglut.h>
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 void InputHandler::Keyboard(unsigned char key, int x, int y)
 {
