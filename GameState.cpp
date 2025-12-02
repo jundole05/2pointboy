@@ -36,6 +36,10 @@ int GameState::gameTime = 0;
 int GameState::score = 0;
 int GameState::timeFrameCount = 0;
 
+// 다음 블럭 관련 초기화
+int GameState::nextBlockID = 0;
+int GameState::nextBlock[3][3][3] = { 0 };
+
 
 void GameState::initGame()
 {
@@ -76,16 +80,20 @@ void GameState::initGame()
  bound += rand() % 2 + 1;
     }
     
-  quit = 0;
+    quit = 0;
     bye = 0;
     myBlockID = rand() % 5 + 1;
     myRotX = 0;
     myRotY = 0;
- myRotZ = 0;
+    myRotZ = 0;
     myX = 5;
     myY = 5;
     myZ = 9;
     cheat = -1;
+
+    // 다음 블럭 미리 생성
+    nextBlockID = rand() % 5 + 1;
+    Block::copyBlock(Block::getBlockByID(nextBlockID), nextBlock);
 
     // 시간과 점수 초기화
     gameTime = 0;
@@ -95,7 +103,7 @@ void GameState::initGame()
 
 void GameState::spawnNewBlock()
 {
-    myBlockID = (rand() % 5) + 1;
+    myBlockID = nextBlockID;
     if (cheat > 0)
     {
         myBlockID = 3;
@@ -120,6 +128,10 @@ void GameState::spawnNewBlock()
     {
   myY = 0;
     }
+
+    // 새로운 다음 블럭 생성
+    nextBlockID = rand() % 5 + 1;
+    Block::copyBlock(Block::getBlockByID(nextBlockID), nextBlock);
 }
 
 void GameState::updateGame()

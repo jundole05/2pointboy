@@ -731,6 +731,87 @@ void Renderer::drawGameInfo()
     // 점수 표시
     sprintf(buffer, "Score : % d pt", GameState::score);
     drawText(10, windowHeight - 60, buffer);
+
+    // "Next:" 텍스트
+    drawText(10, windowHeight - 100, "Next:");
+
+    // 다음 블럭 미리보기
+    drawNextBlockPreview();
+}
+
+void Renderer::drawNextBlockPreview()
+{
+    int windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
+    int windowWidth = glutGet(GLUT_WINDOW_WIDTH);
+
+    // 3D 렌더링 모드 비활성화
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(0, windowWidth, 0, windowHeight);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glDisable(GL_DEPTH_TEST);
+
+    // 다음 블럭을 2D 단면으로 표시
+    float startX = 10;
+    float startY = windowHeight - 130;
+    float blockSize = 15;
+
+    // X축 중간 단면 표시
+    int xSlice = 1;
+
+    for (int y = 0; y < 3; ++y)
+    {
+        for (int z = 0; z < 3; ++z)
+        {
+            int blockValue = GameState::nextBlock[xSlice][y][z];
+
+            if (blockValue > 0)
+            {
+                // drawGameSpace()와 동일한 색상 매핑 사용
+                switch (blockValue)  // blockID가 아닌 블럭 값으로 색상 결정
+                {
+                case 1: glColor3f(0.8f, 0.4f, 0.4f); break; // 빨강
+                case 2: glColor3f(0.0f, 1.0f, 0.0f); break; // 초록
+                case 3: glColor3f(0.0f, 0.5f, 1.0f); break; // 파랑
+                case 4: glColor3f(1.0f, 1.0f, 0.0f); break; // 노랑
+                case 5: glColor3f(1.0f, 0.0f, 1.0f); break; // 자홍
+                default: glColor3f(1.0f, 1.0f, 1.0f); break;
+                }
+
+                // 채워진 사각형 그리기
+                float px = startX + y * blockSize;
+                float py = startY - z * blockSize;
+
+                glBegin(GL_QUADS);
+                glVertex2f(px, py);
+                glVertex2f(px + blockSize, py);
+                glVertex2f(px + blockSize, py - blockSize);
+                glVertex2f(px, py - blockSize);
+                glEnd();
+
+                // 테두리 그리기
+                glColor3f(0.0f, 0.0f, 0.0f);
+                glBegin(GL_LINE_LOOP);
+                glVertex2f(px, py);
+                glVertex2f(px + blockSize, py);
+                glVertex2f(px + blockSize, py - blockSize);
+                glVertex2f(px, py - blockSize);
+                glEnd();
+            }
+        }
+    }
+
+    // 원래 상태로 복원
+    glEnable(GL_DEPTH_TEST);
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
 }
 
 // 카메라 업데이트 함수 추가

@@ -150,3 +150,17 @@ void Block::rotateBlockZ(int block[3][3][3])
    }
     }
 }
+
+// 블럭 가져오기 함수
+int (*Block::getBlockByID(int blockID))[3][3]
+{
+    switch (blockID)
+    {
+        case 1: return block1;
+        case 2: return block2;
+        case 3: return block3;
+        case 4: return block4;
+        case 5: return block5;
+        default: return block1;
+    }
+}

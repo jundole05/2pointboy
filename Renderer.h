@@ -60,8 +60,11 @@ public:
     static void Reshape(int w, int h);
 
     // 텍스트 렌더링 함수
-    static void drawText(float x, float y, const char* text);
+    
     static void drawGameInfo();
+
+    // 다음 블럭 미리보기 그리기
+    static void drawNextBlockPreview();
 
     // 카메라 회전 관련
     static float cameraYaw;    // 좌우 회전 (Y축)
@@ -74,4 +77,5 @@ private:
     static void drawGameSpace();
     static void drawPreview();
     static void drawOutBlocks();
+    static void drawText(float x, float y, const char* text);
 };

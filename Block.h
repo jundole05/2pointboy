@@ -25,4 +25,8 @@ public:
     static void rotateBlockX(int block[3][3][3]);
     static void rotateBlockY(int block[3][3][3]);
     static void rotateBlockZ(int block[3][3][3]);
+
+    // 추가: 블럭 ID로 블럭 데이터 가져오기
+    static int (*getBlockByID(int blockID))[3][3];
+
 };

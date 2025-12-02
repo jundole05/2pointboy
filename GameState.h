@@ -18,6 +18,10 @@ public:
     static int myBlock[3][3][3];
     static int myRotX, myRotY, myRotZ;
     static int myX, myY, myZ;
+
+ // 다음 블록 상태
+    static int nextBlockID;
+    static int nextBlock[3][3][3];
     
   // 게임 상태 변수
     static int quit, bye;
@@ -35,6 +39,7 @@ public:
     static int timeFrameCount;
 
     static void initGame();
+    static void spawnNewBlock();
     static void updateGame();
     static void killBlock();
     static void preview();
@@ -44,6 +49,6 @@ public:
     static int collides(int dir);
     static int isGameOver();
     
-    static void spawnNewBlock();
+    
     static void resetRotation();
 };
