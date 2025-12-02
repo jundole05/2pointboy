@@ -141,6 +141,15 @@ glm::mat4 Renderer::topDownProj = glm::ortho(-8.0f, 8.0f, -8.0f, 8.0f, 0.1f, 100
 
 glm::mat4 Renderer::topDownTrans;
 
+// 추가: lookdown 뷰포트용 (P키 누른 상태)
+glm::mat4 Renderer::lookdownCamera = glm::lookAt(
+    glm::vec3(0, 24, 0),      // 위에서 아래로
+    glm::vec3(0, 0, 0),       // 중심점
+    glm::vec3(0, 0, -1)       // Up 벡터
+);
+glm::mat4 Renderer::lookdownProj = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
+glm::mat4 Renderer::lookdownTrans;
+
 void Renderer::InitBuffer()
 {
     glGenVertexArrays(1, &VAO_preview);
@@ -263,6 +272,9 @@ void Renderer::drawScene()
     // 추가 뷰포트
     drawTopDownViewport(windowWidth, windowHeight);
 
+    // 추가: 오른쪽 아래: Lookdown 뷰포트 (P키 누른 상태)
+    drawLookdownViewport(windowWidth, windowHeight);
+
     glViewport(0, 0, windowWidth, windowHeight);
 
     // 시간과 점수 표시
@@ -271,6 +283,36 @@ void Renderer::drawScene()
     glUseProgram(shaderID);  // 셰이더 재활성화
 
     glutSwapBuffers();
+}
+
+void Renderer::drawLookdownViewport(int windowWidth, int windowHeight)
+{
+    // 오른쪽 아래 1/4 크기 뷰포트 설정
+    int vpWidth = windowWidth / 4;
+    int vpHeight = windowHeight / 4;
+    int vpX = windowWidth - vpWidth - 10;   // 오른쪽에서 10px 여백
+    int vpY = 10;                           // 아래에서 10px 여백
+
+    glViewport(vpX, vpY, vpWidth, vpHeight);
+
+    // 메인 뷰포트와 동일한 카메라/프로젝션 사용
+    // 단, lookdown 상태 적용
+    glm::mat4 lookdownModel = model;
+
+    // P키를 누른 상태 (lookdown == 1) 시뮬레이션
+    lookdownModel = glm::rotate(lookdownModel, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    // 메인 뷰포트와 동일한 camera와 proj 사용
+    lookdownTrans = proj * camera * lookdownModel;
+    glUniformMatrix4fv(MatrixID, 1, FALSE, glm::value_ptr(lookdownTrans));
+
+    // 씬 그리기 (채워진 모드)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    drawBackground();
+    drawGameSpace();
+    drawPreview();
+    drawOutBlocks();
 }
 
 void Renderer::drawTopDownViewport(int windowWidth, int windowHeight)
@@ -694,4 +736,6 @@ proj = glm::perspective(glm::radians(45.0f), (float)w / (float)h, 0.1f, 100.0f);
 // Top-down 프로젝션도 비율에 맞게 업데이트 (선택사항)
 float aspect = (float)w / (float)h;
 topDownProj = glm::ortho(-8.0f * aspect, 8.0f * aspect, -8.0f, 8.0f, 0.1f, 100.0f);
+
+lookdownProj = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
 }

@@ -45,6 +45,12 @@ public:
     static glm::mat4 topDownProj;
     static glm::mat4 topDownTrans;
     static void drawTopDownViewport(int windowWidth, int windowHeight);
+
+    // 추가: lookdown 뷰포트용
+    static glm::mat4 lookdownCamera;
+    static glm::mat4 lookdownProj;
+    static glm::mat4 lookdownTrans;
+    static void drawLookdownViewport(int windowWidth, int windowHeight);
     
     static void InitBuffer();
     static void drawScene();
