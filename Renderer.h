@@ -39,6 +39,8 @@ public:
     static glm::mat4 model;
     static glm::mat4 trans;
     static glm::mat4 rot;
+    
+
 
     // 추가뷰포트용 변수
     static glm::mat4 topDownCamera;
@@ -50,6 +52,7 @@ public:
     static glm::mat4 lookdownCamera;
     static glm::mat4 lookdownProj;
     static glm::mat4 lookdownTrans;
+    static glm::mat4 lookdownFixedCamera;
     static void drawLookdownViewport(int windowWidth, int windowHeight);
     
     static void InitBuffer();

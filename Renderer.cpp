@@ -153,6 +153,7 @@ glm::mat4 Renderer::lookdownCamera = glm::lookAt(
     glm::vec3(0, 0, 0),       // 중심점
     glm::vec3(0, 0, -1)       // Up 벡터
 );
+glm::mat4 Renderer::lookdownFixedCamera = glm::lookAt(glm::vec3(12, 12, 24), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 glm::mat4 Renderer::lookdownProj = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
 glm::mat4 Renderer::lookdownTrans;
 
@@ -296,20 +297,19 @@ void Renderer::drawLookdownViewport(int windowWidth, int windowHeight)
     // 오른쪽 아래 1/4 크기 뷰포트 설정
     int vpWidth = windowWidth / 4;
     int vpHeight = windowHeight / 4;
-    int vpX = windowWidth - vpWidth - 10;   // 오른쪽에서 10px 여백
-    int vpY = 10;                           // 아래에서 10px 여백
+    int vpX = windowWidth - vpWidth - 10;
+    int vpY = 10;
 
     glViewport(vpX, vpY, vpWidth, vpHeight);
 
-    // 메인 뷰포트와 동일한 카메라/프로젝션 사용
-    // 단, lookdown 상태 적용
+    // 고정된 카메라 사용 (마우스 드래그 영향 없음)
     glm::mat4 lookdownModel = model;
 
     // P키를 누른 상태 (lookdown == 1) 시뮬레이션
     lookdownModel = glm::rotate(lookdownModel, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-    // 메인 뷰포트와 동일한 camera와 proj 사용
-    lookdownTrans = proj * camera * lookdownModel;
+    // lookdownFixedCamera 사용 (초기 카메라 위치 고정)
+    lookdownTrans = proj * lookdownFixedCamera * lookdownModel;
     glUniformMatrix4fv(MatrixID, 1, FALSE, glm::value_ptr(lookdownTrans));
 
     // 씬 그리기 (채워진 모드)
