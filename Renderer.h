@@ -50,6 +50,10 @@ public:
     static void drawScene();
     static void Reshape(int w, int h);
 
+    // 텍스트 렌더링 함수
+    static void drawText(float x, float y, const char* text);
+    static void drawGameInfo();
+
     
 private:
     static void drawBackground();

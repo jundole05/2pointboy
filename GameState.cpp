@@ -31,6 +31,12 @@ int GameState::fneed = 2;
 int GameState::current_rot = 0;
 int GameState::lookdown = 0;
 
+// 시간, 점수 관련 초기화
+int GameState::gameTime = 0;
+int GameState::score = 0;
+int GameState::timeFrameCount = 0;
+
+
 void GameState::initGame()
 {
     // 게임 공간 지우기
@@ -80,6 +86,11 @@ void GameState::initGame()
     myY = 5;
     myZ = 9;
     cheat = -1;
+
+    // 시간과 점수 초기화
+    gameTime = 0;
+    score = 0;
+    timeFrameCount = 0;
 }
 
 void GameState::spawnNewBlock()
@@ -231,61 +242,64 @@ void GameState::killBlock()
     for (int z = 0; z < 12; ++z)
     {
         t = 1;
-      for (int x = 0; x < 12; ++x)
-    {
-       for (int y = 0; y < 12; ++y)
-       {
-          if (tempSpace[x][y][z] == 0)
+        for (int x = 0; x < 12; ++x)
+        {
+            for (int y = 0; y < 12; ++y)
+            {
+                if (tempSpace[x][y][z] == 0)
                 {
-            t = 0;
-          }
+                    t = 0;
+                }
             }
         }
         if (t)
         {
-        target = z;
-  break;
-}
-  }
-    
+            target = z;
+            break;
+        }
+    }
+
     if (target != -1)
     {
+        // 점수 추가 (한 줄 제거시 10점)
+        score += 10;
+
         out[target] = 1;
         for (int x = 0; x < 12; ++x)
-   {
-  for (int y = 0; y < 12; ++y)
-    {
-       outSpace[x][target][y] = tempSpace[x][y][target];
-            printf("%d ", outSpace[x][y][target]);
- }
-         printf("\n");
+        {
+            for (int y = 0; y < 12; ++y)
+            {
+                outSpace[x][target][y] = tempSpace[x][y][target];
+                printf("%d ", outSpace[x][y][target]);
+            }
+            printf("\n");
         }
 
         for (int z = target; z < 11; ++z)
-      {
-   for (int x = 0; x < 12; ++x)
         {
-        for (int y = 0; y < 12; ++y)
-          {
- int temp;
-     temp = tempSpace[x][y][z];
-              tempSpace[x][y][z] = tempSpace[x][y][z + 1];
-       tempSpace[x][y][z + 1] = temp;
-      }
-         }
+            for (int x = 0; x < 12; ++x)
+            {
+                for (int y = 0; y < 12; ++y)
+                {
+                    int temp;
+                    temp = tempSpace[x][y][z];
+                    tempSpace[x][y][z] = tempSpace[x][y][z + 1];
+                    tempSpace[x][y][z + 1] = temp;
+                }
+            }
         }
-        
+
         for (int x = 0; x < 12; ++x)
         {
-    for (int y = 0; y < 12; ++y)
+            for (int y = 0; y < 12; ++y)
             {
-    tempSpace[x][y][11] = 0;
-    }
-     }
-        
+                tempSpace[x][y][11] = 0;
+            }
+        }
+
         if (frames_needed > 15)
-      frames_needed -= 1;
-  }
+            frames_needed -= 1;
+    }
 }
 
 void GameState::preview()

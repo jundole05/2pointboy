@@ -6,7 +6,7 @@ public:
     static const int GRID_SIZE = 12;
     
     // 게임 공간
- static GLint GameSpace[12][12][12];
+    static GLint GameSpace[12][12][12];
     static GLint tempSpace[12][12][12];
     static GLint blockSpace[12][12][12];
     static GLint previewSpace[12][12][12];
@@ -24,12 +24,17 @@ public:
     static int cheat;
     static int frameCount;
     static int frames_needed;
-  static int fCount;
+    static int fCount;
     static int fneed;
     static int current_rot;
     static int lookdown;
 
-static void initGame();
+    // 시간과 점수 변수
+    static int gameTime; // 게임 플레이 시간 (초)
+    static int score;    // 점수
+    static int timeFrameCount;
+
+    static void initGame();
     static void updateGame();
     static void killBlock();
     static void preview();
@@ -37,7 +42,7 @@ static void initGame();
  
     static int isEnded();
     static int collides(int dir);
- static int isGameOver();
+    static int isGameOver();
     
     static void spawnNewBlock();
     static void resetRotation();

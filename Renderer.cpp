@@ -263,6 +263,13 @@ void Renderer::drawScene()
     // 추가 뷰포트
     drawTopDownViewport(windowWidth, windowHeight);
 
+    glViewport(0, 0, windowWidth, windowHeight);
+
+    // 시간과 점수 표시
+    glUseProgram(0);  // 셰이더 비활성화
+    drawGameInfo();
+    glUseProgram(shaderID);  // 셰이더 재활성화
+
     glutSwapBuffers();
 }
 
@@ -621,6 +628,61 @@ if (GameState::out[z] > 0)
 }
 }
     }
+}
+
+// 텍스트 관련 함수
+void Renderer::drawText(float x, float y, const char* text)
+{
+    // 3D 렌더링 모드 비활성화
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+
+    int windowWidth = glutGet(GLUT_WINDOW_WIDTH);
+    int windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
+    gluOrtho2D(0, windowWidth, 0, windowHeight);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glDisable(GL_DEPTH_TEST);
+
+    // 텍스트 색상 (흰색)
+    glColor3f(1.0f, 1.0f, 1.0f);
+
+    // 텍스트 위치 설정
+    glRasterPos2f(x, y);
+
+    // 텍스트 렌더링
+    for (const char* c = text; *c != '\0'; c++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+    }
+
+    // 원래 상태로 복원
+    glEnable(GL_DEPTH_TEST);
+
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+}
+
+// 게임정보 그리는 함수
+void Renderer::drawGameInfo()
+{
+    char buffer[100];
+
+    int windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
+
+    // 시간 표시
+    sprintf(buffer, "Time : %d sec", GameState::gameTime);
+    drawText(10, windowHeight - 30, buffer);
+
+    // 점수 표시
+    sprintf(buffer, "Score : % d pt", GameState::score);
+    drawText(10, windowHeight - 60, buffer);
 }
 
 void Renderer::Reshape(int w, int h)

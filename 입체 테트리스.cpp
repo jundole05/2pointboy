@@ -74,16 +74,23 @@ std::cerr << "GLEW 초기화 불가능" << std::endl;
 
 GLvoid GameLoop(int value)
 {
-    GameState::updateGame();
-    GameState::killBlock();
+   GameState::updateGame();
+   GameState::killBlock();
     
-  GameState::fCount += 1;
-  if (GameState::fCount == GameState::fneed)
-    {
+   GameState::fCount += 1;
+   if (GameState::fCount == GameState::fneed)
+     {
         GameState::goout();
-    GameState::fCount = 0;
-    }
-    
+        GameState::fCount = 0;
+     }
+   // 시간 계산 (30프레임당 1초)
+  GameState::timeFrameCount++;
+  if (GameState::timeFrameCount >= 30)
+  {
+      GameState::gameTime++;
+      GameState::timeFrameCount = 0;
+  }
+
     glutPostRedisplay();
     
     if (GameState::quit == 1)
