@@ -15,6 +15,7 @@
 #include "Renderer.h"
 #include "InputHandler.h"
 #include "ShaderManager.h"
+#include "LobbyScreen.h"
 
 
 using namespace std;
@@ -66,45 +67,47 @@ std::cerr << "GLEW 초기화 불가능" << std::endl;
     ShaderManager::fragmentShaderSource = filetobuf("fragment1.glsl");
 
     ShaderManager::make_vertexShaders();
- ShaderManager::make_fragmentShaders();
+    ShaderManager::make_fragmentShaders();
     Renderer::shaderID = ShaderManager::make_shaderProgram();
     
     Block::initializeBlocks();
     Renderer::InitBuffer();
-    GameState::initGame();
+    LobbyScreen::init();
     
     glutMainLoop();
 }
 
 GLvoid GameLoop(int value)
 {
-   GameState::updateGame();
-   GameState::killBlock();
-    
-   GameState::fCount += 1;
-   if (GameState::fCount == GameState::fneed)
-     {
-        GameState::goout();
-        GameState::fCount = 0;
-     }
-   // 시간 계산 (30프레임당 1초)
-  GameState::timeFrameCount++;
-  if (GameState::timeFrameCount >= 30)
-  {
-      GameState::gameTime++;
-      GameState::timeFrameCount = 0;
-  }
+    // 로비 화면에서는 게임 로직 실행 안 함
+    if (!LobbyScreen::isInLobby)
+    {
+        GameState::updateGame();
+        GameState::killBlock();
+
+        GameState::fCount += 1;
+        if (GameState::fCount == GameState::fneed)
+        {
+            GameState::goout();
+            GameState::fCount = 0;
+        }
+
+        // 시간 계산
+        GameState::timeFrameCount++;
+        if (GameState::timeFrameCount >= 30)
+        {
+            GameState::gameTime++;
+            GameState::timeFrameCount = 0;
+        }
+
+        if (GameState::quit == 1)
+        {
+            // 게임 오버 시 로비로 복귀
+            LobbyScreen::isInLobby = true;
+            GameState::quit = 0;
+        }
+    }
 
     glutPostRedisplay();
-    
-    if (GameState::quit == 1)
-    {
-        GameState::initGame();
-  }
-    if (GameState::bye == 1)
-    {
-        PostQuitMessage(0);
-    }
-    
     glutTimerFunc(30, GameLoop, 1);
 }
