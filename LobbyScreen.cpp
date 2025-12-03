@@ -1,5 +1,6 @@
 #include "LobbyScreen.h"
 #include "GameState.h"
+#include "AudioManager.h"
 #include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -20,6 +21,10 @@ void LobbyScreen::init()
 {
     isInLobby = true;
     loadTexture("mainscreen.png");
+    
+    // 로비 배경음악 재생
+    std::cout << "Initializing lobby screen and playing music..." << std::endl;
+    AudioManager::playBackgroundMusicSimple(L"C:\\3dp\\2pointboy\\lobby.wav");
 }
 
 bool LobbyScreen::loadTexture(const char* filename)
@@ -150,20 +155,25 @@ void LobbyScreen::handleMouseClick(int button, int state, int x, int y)
 {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
-        // Start Game 버튼 클릭
+    // Start Game 버튼 클릭
         if (isMouseInButton(x, y, START_BTN_X, START_BTN_Y, BUTTON_WIDTH, BUTTON_HEIGHT))
         {
-            std::cout << "Start Game clicked!" << std::endl;
-            isInLobby = false;
+         std::cout << "Start Game clicked!" << std::endl;
+  isInLobby = false;
+            
+         // 게임 시작 음악 재생
+            AudioManager::playBackgroundMusicSimple(L"C:\\3dp\\2pointboy\\game.wav");
+   
             GameState::initGame();
             glutPostRedisplay();
         }
         // Exit Game 버튼 클릭
         else if (isMouseInButton(x, y, EXIT_BTN_X, EXIT_BTN_Y, BUTTON_WIDTH, BUTTON_HEIGHT))
-        {
-            std::cout << "Exit Game clicked!" << std::endl;
+  {
+  std::cout << "Exit Game clicked!" << std::endl;
             cleanup();
-            exit(0);
+            AudioManager::cleanup();
+     exit(0);
         }
     }
 }
@@ -173,6 +183,6 @@ void LobbyScreen::cleanup()
     if (backgroundTexture != 0)
     {
         glDeleteTextures(1, &backgroundTexture);
-        backgroundTexture = 0;
+      backgroundTexture = 0;
     }
 }

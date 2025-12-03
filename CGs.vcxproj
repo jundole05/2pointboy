@@ -19,8 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="filein.cpp" />
+    <ClCompile Include="GameOverScreen.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="LobbyScreen.cpp" />
@@ -33,8 +35,10 @@
     <None Include="vertex1.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="filein.h" />
+    <ClInclude Include="GameOverScreen.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="LobbyScreen.h" />

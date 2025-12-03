@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "LobbyScreen.h"
+#include "GameOverScreen.h"
 
 // 정적 변수 초기화 추가
 bool InputHandler::isDragging = false;
@@ -14,26 +15,33 @@ int InputHandler::lastMouseY = 0;
 // 마우스 버튼 콜백
 void InputHandler::Mouse(int button, int state, int x, int y)
 {
+    // 게임 오버 화면 우선 처리
+    if (GameOverScreen::isInGameOver)
+    {
+GameOverScreen::handleMouseClick(button, state, x, y);
+     return;
+    }
+    
     // 로비 화면에서는 로비 클릭 처리
     if (LobbyScreen::isInLobby)
     {
         LobbyScreen::handleMouseClick(button, state, x, y);
-        return;
+   return;
     }
 
     // 게임 화면에서는 카메라 회전 처리
     if (button == GLUT_LEFT_BUTTON)
-    {
+  {
         if (state == GLUT_DOWN)
-        {
-            isDragging = true;
-            lastMouseX = x;
-            lastMouseY = y;
-        }
-        else if (state == GLUT_UP)
+   {
+ isDragging = true;
+      lastMouseX = x;
+lastMouseY = y;
+ }
+ else if (state == GLUT_UP)
         {
             isDragging = false;
-        }
+  }
     }
 }
 

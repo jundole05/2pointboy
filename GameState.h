@@ -37,6 +37,10 @@ public:
     static int gameTime; // 게임 플레이 시간 (초)
     static int score;    // 점수
     static int timeFrameCount;
+    
+    // 게임 오버 지연 타이머
+    static int gameOverDelay;
+    static bool isGameOverPlaying;
 
     static void initGame();
     static void spawnNewBlock();

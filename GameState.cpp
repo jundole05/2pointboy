@@ -36,6 +36,10 @@ int GameState::gameTime = 0;
 int GameState::score = 0;
 int GameState::timeFrameCount = 0;
 
+// 게임 오버 지연 타이머 초기화
+int GameState::gameOverDelay = 0;
+bool GameState::isGameOverPlaying = false;
+
 // 다음 블럭 관련 초기화
 int GameState::nextBlockID = 0;
 int GameState::nextBlock[3][3][3] = { 0 };
@@ -45,39 +49,39 @@ void GameState::initGame()
 {
     // 게임 공간 지우기
     for (int i = 0; i < 12; ++i)
-    {
-        for (int j = 0; j < 12; ++j)
-        {
-   for (int k = 0; k < 12; ++k)
-    {
-                GameSpace[i][j][k] = 0;
-        tempSpace[i][j][k] = 0;
-     blockSpace[i][j][k] = 0;
-      previewSpace[i][j][k] = 0;
-       outSpace[i][j][k] = 0;
-            }
-     }
+  {
+      for (int j = 0; j < 12; ++j)
+      {
+            for (int k = 0; k < 12; ++k)
+  {
+           GameSpace[i][j][k] = 0;
+     tempSpace[i][j][k] = 0;
+  blockSpace[i][j][k] = 0;
+                previewSpace[i][j][k] = 0;
+            outSpace[i][j][k] = 0;
+    }
+        }
         out[i] = 0;
     }
 
     srand((unsigned int)time(NULL));
     int bound = rand() % 2;
-    for (int z = 2; z >= 0; --z)
+  for (int z = 2; z >= 0; --z)
     {
-        for (int tx = -bound; tx < bound; ++tx)
-{
-          int x = tx;
+    for (int tx = -bound; tx < bound; ++tx)
+        {
+            int x = tx;
             if (x < 0)
-            {
-      x += 12;
-            }
-            for (int ty = 0; ty < 12; ++ty)
-            {
-    tempSpace[x][ty][z] = z + 1;
-    tempSpace[ty][x][z] = z + 1;
-       }
+  {
+          x += 12;
+   }
+  for (int ty = 0; ty < 12; ++ty)
+   {
+       tempSpace[x][ty][z] = z + 1;
+      tempSpace[ty][x][z] = z + 1;
         }
- bound += rand() % 2 + 1;
+   }
+        bound += rand() % 2 + 1;
     }
     
     quit = 0;
@@ -96,9 +100,13 @@ void GameState::initGame()
     Block::copyBlock(Block::getBlockByID(nextBlockID), nextBlock);
 
     // 시간과 점수 초기화
-    gameTime = 0;
+  gameTime = 0;
     score = 0;
-    timeFrameCount = 0;
+timeFrameCount = 0;
+    
+    // 게임 오버 플래그 초기화
+    gameOverDelay = 0;
+    isGameOverPlaying = false;
 }
 
 void GameState::spawnNewBlock()

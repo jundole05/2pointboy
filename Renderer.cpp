@@ -3,6 +3,7 @@
 #include <glm/ext.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "LobbyScreen.h"
+#include "GameOverScreen.h"
 
 // 정적 변수 초기화
 GLuint Renderer::VAO[12][12][12];
@@ -259,6 +260,13 @@ void Renderer::InitBuffer()
 
 void Renderer::drawScene()
 {
+    // 게임 오버 화면 우선 처리
+    if (GameOverScreen::isInGameOver)
+    {
+        GameOverScreen::draw();
+ return;
+    }
+    
     // 로비 화면이면 로비 그리기
     if (LobbyScreen::isInLobby)
     {
@@ -462,52 +470,52 @@ squareColor[i][2] = 0.0;
 
      GLint pAttribute1 = glGetAttribLocation(shaderID, "vPos");
       glVertexAttribPointer(pAttribute1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-       glEnableVertexAttribArray(pAttribute1);
+   glEnableVertexAttribArray(pAttribute1);
 
    glBindBuffer(GL_ARRAY_BUFFER, VBO_color[x][y][z]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(squareColor), squareColor, GL_STATIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, sizeof(squareColor), squareColor, GL_STATIC_DRAW);
 
          GLint cAttribute1 = glGetAttribLocation(shaderID, "vColor");
-            glVertexAttribPointer(cAttribute1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-                    glEnableVertexAttribArray(cAttribute1);
+         glVertexAttribPointer(cAttribute1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+   glEnableVertexAttribArray(cAttribute1);
 
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-          glDrawArrays(GL_QUADS, 0, 24);
+   glDrawArrays(GL_QUADS, 0, 24);
 
      for (int i = 0; i < 24; ++i)
   {
-               for (int j = 0; j < 3; ++j)
+        for (int j = 0; j < 3; ++j)
       {
-           squareColor[i][j] = 0;
+       squareColor[i][j] = 0;
     }
-          }
+      }
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO_position[x][y][z]);
            glBufferData(GL_ARRAY_BUFFER, sizeof(squarePosition), squarePosition, GL_STATIC_DRAW);
 
      pAttribute1 = glGetAttribLocation(shaderID, "vPos");
    glVertexAttribPointer(pAttribute1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-              glEnableVertexAttribArray(pAttribute1);
+          glEnableVertexAttribArray(pAttribute1);
 
-                    glBindBuffer(GL_ARRAY_BUFFER, VBO_color[x][y][z]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(squareColor), squareColor, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_color[x][y][z]);
+      glBufferData(GL_ARRAY_BUFFER, sizeof(squareColor), squareColor, GL_STATIC_DRAW);
 
           cAttribute1 = glGetAttribLocation(shaderID, "vColor");
-           glVertexAttribPointer(cAttribute1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+         glVertexAttribPointer(cAttribute1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
     glEnableVertexAttribArray(cAttribute1);
 
  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
            glDrawArrays(GL_QUADS, 0, 24);
-      }
+   }
 
  for (int i = 0; i < 24; ++i)
      {
           for (int j = 0; j < 3; ++j)
-          {
+       {
   squarePosition[i][j] = square[i][j];
-          squareColor[i][j] = originColor[i][j];
+      squareColor[i][j] = originColor[i][j];
    }
-     }
+  }
        }
 }
     }
@@ -672,18 +680,18 @@ if (GameState::out[z] > 0)
                 glVertexAttribPointer(cAttribute4, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
     glEnableVertexAttribArray(cAttribute4);
 
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-           glDrawArrays(GL_QUADS, 0, 24);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+       glDrawArrays(GL_QUADS, 0, 24);
     }
 
       for (int i = 0; i < 24; ++i)
       {
       for (int j = 0; j < 3; ++j)
  {
-         outPosition[i][j] = square[i][j];
-         outColor[i][j] = originColor[i][j];
+     outPosition[i][j] = square[i][j];
+     outColor[i][j] = originColor[i][j];
   }
-            }
+   }
         }
 }
 }
