@@ -23,6 +23,7 @@
     <ClCompile Include="filein.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="LobbyScreen.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="입체 테트리스.cpp" />
@@ -36,8 +37,10 @@
     <ClInclude Include="filein.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="LobbyScreen.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
