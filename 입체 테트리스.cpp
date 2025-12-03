@@ -121,7 +121,7 @@ GLvoid GameLoop(int value)
     AudioManager::stopMusic();
             
             // 게임 오버 음악 재생
-            AudioManager::playGameOverMusicSimple(L"C:\\3dp\\2pointboy\\gameover.wav");
+            AudioManager::playGameOverMusicSimple(L"gameover.wav");
             
          // 게임 오버 화면 표시
         GameOverScreen::init(GameState::score, GameState::gameTime);

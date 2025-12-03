@@ -148,11 +148,11 @@ void GameOverScreen::handleMouseClick(int button, int state, int x, int y)
   std::cout << "Restart Game clicked!" << std::endl;
    isInGameOver = false;
     
-            // 게임 재시작
+   // 게임 재시작
      GameState::initGame();
  
   // 게임 음악 재생
- AudioManager::playBackgroundMusicSimple(L"C:\\3dp\\2pointboy\\game.wav");
+ AudioManager::playBackgroundMusicSimple(L"game.wav");
  
       glutPostRedisplay();
         }
@@ -164,8 +164,8 @@ void GameOverScreen::handleMouseClick(int button, int state, int x, int y)
             LobbyScreen::isInLobby = true;
             
             // 로비 음악 재생
-       AudioManager::playBackgroundMusicSimple(L"C:\\3dp\\2pointboy\\lobby.wav");
-          
+       AudioManager::playBackgroundMusicSimple(L"lobby.wav");
+
         glutPostRedisplay();
         }
     }

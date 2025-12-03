@@ -24,7 +24,7 @@ void LobbyScreen::init()
     
     // 로비 배경음악 재생
     std::cout << "Initializing lobby screen and playing music..." << std::endl;
-    AudioManager::playBackgroundMusicSimple(L"C:\\3dp\\2pointboy\\lobby.wav");
+    AudioManager::playBackgroundMusicSimple(L"lobby.wav");
 }
 
 bool LobbyScreen::loadTexture(const char* filename)
@@ -160,18 +160,18 @@ void LobbyScreen::handleMouseClick(int button, int state, int x, int y)
         {
          std::cout << "Start Game clicked!" << std::endl;
   isInLobby = false;
-            
-         // 게임 시작 음악 재생
-            AudioManager::playBackgroundMusicSimple(L"C:\\3dp\\2pointboy\\game.wav");
+     
+   // 게임 배경 음악 재생
+       AudioManager::playBackgroundMusicSimple(L"game.wav");
    
             GameState::initGame();
             glutPostRedisplay();
-        }
+  }
         // Exit Game 버튼 클릭
-        else if (isMouseInButton(x, y, EXIT_BTN_X, EXIT_BTN_Y, BUTTON_WIDTH, BUTTON_HEIGHT))
+    else if (isMouseInButton(x, y, EXIT_BTN_X, EXIT_BTN_Y, BUTTON_WIDTH, BUTTON_HEIGHT))
   {
   std::cout << "Exit Game clicked!" << std::endl;
-            cleanup();
+    cleanup();
             AudioManager::cleanup();
      exit(0);
         }
