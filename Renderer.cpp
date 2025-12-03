@@ -2,6 +2,7 @@
 #include "GameState.h"
 #include <glm/ext.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "LobbyScreen.h"
 
 // 정적 변수 초기화
 GLuint Renderer::VAO[12][12][12];
@@ -258,11 +259,24 @@ void Renderer::InitBuffer()
 
 void Renderer::drawScene()
 {
+    // 로비 화면이면 로비 그리기
+    if (LobbyScreen::isInLobby)
+    {
+        LobbyScreen::draw();
+        return;
+    }
+
+    // 게임 화면 그리기
+    drawGameScene();
+}
+
+void Renderer::drawGameScene()
+{
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     glUseProgram(shaderID);
 
-    //기본뷰포트
+    // 기본 뷰포트
     int windowWidth = glutGet(GLUT_WINDOW_WIDTH);
     int windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
     glViewport(0, 0, windowWidth, windowHeight);
@@ -275,19 +289,17 @@ void Renderer::drawScene()
     drawGameSpace();
     drawPreview();
     drawOutBlocks();
-    
+
     // 추가 뷰포트
     drawTopDownViewport(windowWidth, windowHeight);
-
-    // 추가: 오른쪽 아래: Lookdown 뷰포트 (P키 누른 상태)
     drawLookdownViewport(windowWidth, windowHeight);
 
     glViewport(0, 0, windowWidth, windowHeight);
 
     // 시간과 점수 표시
-    glUseProgram(0);  // 셰이더 비활성화
+    glUseProgram(0);
     drawGameInfo();
-    glUseProgram(shaderID);  // 셰이더 재활성화
+    glUseProgram(shaderID);
 
     glutSwapBuffers();
 }

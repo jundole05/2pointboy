@@ -57,6 +57,7 @@ public:
     
     static void InitBuffer();
     static void drawScene();
+    static void drawGameScene();
     static void Reshape(int w, int h);
 
     // 텍스트 렌더링 함수
