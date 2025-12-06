@@ -1,5 +1,6 @@
 #include "GameState.h"
 #include "Block.h"
+#include "AudioManager.h"
 #include <cstdlib>
 #include <ctime>
 #include <cstdio>
@@ -281,7 +282,10 @@ void GameState::killBlock()
 
     if (target != -1)
     {
-        // 점수 추가 (한 줄 제거시 10점)
+        // 효과음 재생 (줄 완성 시)
+        AudioManager::playSoundEffectSimple(L"complete.wav");
+        
+        // 점수 추가 (한 줄 완성시 10점)
         score += 10;
 
         out[target] = 1;

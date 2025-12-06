@@ -17,10 +17,13 @@ public:
     // 게임 오버 음악 재생 (한 번만)
     static void playGameOverMusic(const std::wstring& filename);
     
-    // 효과음 재생
+    // 효과음 재생 (MCI 사용)
     static void playSoundEffect(const std::wstring& filename);
     
-    // 현재 재생 중인 음악 정지
+    // PlaySound API를 사용한 효과음 재생 (비차단, 배경음악에 영향 없음)
+    static void playSoundEffectSimple(const std::wstring& filename);
+    
+    // 음악 정지 혹은 일시 정지
     static void stopMusic();
     
     // 모든 오디오 정지 및 정리

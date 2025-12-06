@@ -41,16 +41,11 @@ void GameOverScreen::draw()
     int windowWidth = glutGet(GLUT_WINDOW_WIDTH);
     int windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
 
-    std::cout << "GameOverScreen draw - Window: " << windowWidth << "x" << windowHeight << std::endl;
-
     // 버튼 위치를 화면 중앙 기준으로 동적 계산
     float restartBtnX = (windowWidth - BUTTON_WIDTH) / 2.0f;
     float restartBtnY = windowHeight / 2.0f - 50.0f;
     float menuBtnX = (windowWidth - BUTTON_WIDTH) / 2.0f;
     float menuBtnY = windowHeight / 2.0f - 150.0f;
-
-    std::cout << "Restart button: (" << restartBtnX << ", " << restartBtnY << ")" << std::endl;
-    std::cout << "Menu button: (" << menuBtnX << ", " << menuBtnY << ")" << std::endl;
 
     // 2D 직교 투영 설정
     glMatrixMode(GL_PROJECTION);
@@ -64,17 +59,17 @@ void GameOverScreen::draw()
 
     // 먼저 배경을 그립니다
     glDisable(GL_BLEND);
-    glColor3f(0.1f, 0.1f, 0.1f); // 어두운 회색 배경
- glBegin(GL_QUADS);
+glColor3f(0.1f, 0.1f, 0.1f); // 어두운 회색 배경
+    glBegin(GL_QUADS);
     glVertex2f(0, 0);
     glVertex2f((float)windowWidth, 0);
     glVertex2f((float)windowWidth, (float)windowHeight);
     glVertex2f(0, (float)windowHeight);
     glEnd();
 
-  // "GAME OVER" 텍스트
+    // "GAME OVER" 텍스트
     glColor3f(1.0f, 0.0f, 0.0f);
-    float titleX = windowWidth / 2.0f - 80.0f;
+  float titleX = windowWidth / 2.0f - 80.0f;
     float titleY = windowHeight / 2.0f + 150.0f;
     drawText(titleX, titleY, "GAME OVER", GLUT_BITMAP_TIMES_ROMAN_24);
 
@@ -82,7 +77,7 @@ void GameOverScreen::draw()
     char scoreText[100];
     sprintf(scoreText, "Score: %d", finalScore);
     glColor3f(1.0f, 1.0f, 1.0f);
-float scoreX = windowWidth / 2.0f - 80.0f;
+    float scoreX = windowWidth / 2.0f - 80.0f;
     float scoreY = windowHeight / 2.0f + 80.0f;
     drawText(scoreX, scoreY, scoreText, GLUT_BITMAP_HELVETICA_18);
 
@@ -92,35 +87,32 @@ float scoreX = windowWidth / 2.0f - 80.0f;
     float timeY = windowHeight / 2.0f + 50.0f;
   drawText(timeX, timeY, timeText, GLUT_BITMAP_HELVETICA_18);
 
-  // 블렌딩 활성화 (버튼 그리기)
+    // 블렌딩 활성화 (버튼 그리기)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
- // 버튼 그리기
-  std::cout << "Drawing buttons..." << std::endl;
+  // 버튼 그리기
     drawButton(restartBtnX, restartBtnY, BUTTON_WIDTH, BUTTON_HEIGHT, "Restart Game");
     drawButton(menuBtnX, menuBtnY, BUTTON_WIDTH, BUTTON_HEIGHT, "Main Menu");
 
     // 블렌딩 비활성화
     glDisable(GL_BLEND);
 
-    // 원래 상태로 복원
+// 원래 상태로 복원
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
-glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
 
-  glEnable(GL_DEPTH_TEST);
+ glEnable(GL_DEPTH_TEST);
 
     glutSwapBuffers();
 }
 
 void GameOverScreen::drawButton(float x, float y, float width, float height, const char* text)
 {
-    std::cout << "drawButton called: pos=(" << x << ", " << y << ") size=(" << width << ", " << height << ")" << std::endl;
-
-    // 버튼 배경 (더 불투명하게)
-    glColor4f(0.8f, 0.2f, 0.2f, 1.0f); // 완전 불투명으로 변경
+    // 버튼 배경 (완전 불투명)
+    glColor4f(0.8f, 0.2f, 0.2f, 1.0f);
     glBegin(GL_QUADS);
     glVertex2f(x, y);
     glVertex2f(x + width, y);
@@ -128,14 +120,14 @@ void GameOverScreen::drawButton(float x, float y, float width, float height, con
     glVertex2f(x, y + height);
     glEnd();
 
-    // 버튼 테두리 (더 두껍게)
-    glColor3f(1.0f, 1.0f, 0.0f); // 노란색으로 변경 (잘 보이게)
+    // 버튼 테두리
+    glColor3f(1.0f, 1.0f, 0.0f); // 노란색
     glLineWidth(5.0f);
     glBegin(GL_LINE_LOOP);
     glVertex2f(x, y);
     glVertex2f(x + width, y);
- glVertex2f(x + width, y + height);
- glVertex2f(x, y + height);
+    glVertex2f(x + width, y + height);
+  glVertex2f(x, y + height);
     glEnd();
 
     // 버튼 텍스트

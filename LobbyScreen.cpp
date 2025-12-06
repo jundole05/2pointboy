@@ -25,7 +25,6 @@ void LobbyScreen::init()
     loadTexture("mainscreen.png");
     
     // 로비 배경음악 재생
-    std::cout << "Initializing lobby screen and playing music..." << std::endl;
     AudioManager::playBackgroundMusicSimple(L"lobby.wav");
 }
 
@@ -53,7 +52,6 @@ bool LobbyScreen::loadTexture(const char* filename)
 
     stbi_image_free(image);
 
-    std::cout << "Texture loaded successfully: " << filename << std::endl;
     return true;
 }
 
@@ -61,63 +59,56 @@ void LobbyScreen::draw()
 {
     // 셰이더 프로그램 비활성화 (2D UI 그리기 전에 필수!)
     glUseProgram(0);
-    
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+ 
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
 
     int windowWidth = glutGet(GLUT_WINDOW_WIDTH);
     int windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
 
-    std::cout << "LobbyScreen draw - Window: " << windowWidth << "x" << windowHeight << std::endl;
-
     // 버튼 위치를 화면 중앙 기준으로 동적 계산
     float startBtnX = (windowWidth - BUTTON_WIDTH) / 2.0f;
-    float startBtnY = windowHeight / 2.0f - 50.0f;
+ float startBtnY = windowHeight / 2.0f - 50.0f;
     float exitBtnX = (windowWidth - BUTTON_WIDTH) / 2.0f;
     float exitBtnY = windowHeight / 2.0f - 150.0f;
 
-  std::cout << "Start button: (" << startBtnX << ", " << startBtnY << ")" << std::endl;
-    std::cout << "Exit button: (" << exitBtnX << ", " << exitBtnY << ")" << std::endl;
-
     // 2D 직교 투영 설정
     glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
+  glPushMatrix();
     glLoadIdentity();
     gluOrtho2D(0, windowWidth, 0, windowHeight);
 
     glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
+  glPushMatrix();
     glLoadIdentity();
 
     // 배경 이미지 그리기
     if (backgroundTexture != 0)
     {
-    glEnable(GL_TEXTURE_2D);
+        glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, backgroundTexture);
 
-        glColor3f(1.0f, 1.0f, 1.0f);
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(0, 0);
+    glColor3f(1.0f, 1.0f, 1.0f);
+ glBegin(GL_QUADS);
+ glTexCoord2f(0.0f, 0.0f); glVertex2f(0, 0);
         glTexCoord2f(1.0f, 0.0f); glVertex2f((float)windowWidth, 0);
-     glTexCoord2f(1.0f, 1.0f); glVertex2f((float)windowWidth, (float)windowHeight);
-  glTexCoord2f(0.0f, 1.0f); glVertex2f(0, (float)windowHeight);
-        glEnd();
+        glTexCoord2f(1.0f, 1.0f); glVertex2f((float)windowWidth, (float)windowHeight);
+      glTexCoord2f(0.0f, 1.0f); glVertex2f(0, (float)windowHeight);
+ glEnd();
 
         glDisable(GL_TEXTURE_2D);
     }
     else
     {
-     // 배경 이미지 로드 실패 시 검은 배경
-        std::cout << "No background texture, using black background" << std::endl;
+        // 배경 이미지 로드 실패 시 검은 배경
       glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
-    // 블렌딩 활성화 (버튼 그리기 전)
+  // 블렌딩 활성화 (버튼 그리기 전)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // 버튼 그리기
-    std::cout << "Drawing buttons..." << std::endl;
     drawButton(startBtnX, startBtnY, BUTTON_WIDTH, BUTTON_HEIGHT, "Start Game");
     drawButton(exitBtnX, exitBtnY, BUTTON_WIDTH, BUTTON_HEIGHT, "Exit Game");
 
@@ -130,17 +121,15 @@ void LobbyScreen::draw()
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
 
-    glEnable(GL_DEPTH_TEST);
+  glEnable(GL_DEPTH_TEST);
 
     glutSwapBuffers();
 }
 
 void LobbyScreen::drawButton(float x, float y, float width, float height, const char* text)
 {
-    std::cout << "LobbyScreen::drawButton called: pos=(" << x << ", " << y << ") size=(" << width << ", " << height << ")" << std::endl;
-
     // 버튼 배경 (완전 불투명)
-    glColor4f(0.2f, 0.5f, 0.8f, 1.0f); // 완전 불투명으로 변경
+    glColor4f(0.2f, 0.5f, 0.8f, 1.0f);
     glBegin(GL_QUADS);
     glVertex2f(x, y);
     glVertex2f(x + width, y);
@@ -148,8 +137,8 @@ void LobbyScreen::drawButton(float x, float y, float width, float height, const 
     glVertex2f(x, y + height);
     glEnd();
 
-    // 버튼 테두리 (더 두껍고 눈에 띄게)
-    glColor3f(1.0f, 1.0f, 0.0f); // 노란색으로 변경
+    // 버튼 테두리
+    glColor3f(1.0f, 1.0f, 0.0f); // 노란색
     glLineWidth(5.0f);
     glBegin(GL_LINE_LOOP);
     glVertex2f(x, y);
@@ -166,8 +155,8 @@ void LobbyScreen::drawButton(float x, float y, float width, float height, const 
 
     for (const char* c = text; *c != '\0'; c++)
     {
-    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
-    }
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+  }
 }
 
 bool LobbyScreen::isMouseInButton(int mouseX, int mouseY, float btnX, float btnY, float btnWidth, float btnHeight)
@@ -196,7 +185,6 @@ float exitBtnY = windowHeight / 2.0f - 150.0f;
         // Start Game 버튼 클릭
      if (isMouseInButton(x, y, startBtnX, startBtnY, BUTTON_WIDTH, BUTTON_HEIGHT))
      {
-        std::cout << "Start Game clicked!" << std::endl;
     isInLobby = false;
      
             // 게임 배경 음악 재생
@@ -208,7 +196,6 @@ float exitBtnY = windowHeight / 2.0f - 150.0f;
         // Exit Game 버튼 클릭
      else if (isMouseInButton(x, y, exitBtnX, exitBtnY, BUTTON_WIDTH, BUTTON_HEIGHT))
         {
-    std::cout << "Exit Game clicked!" << std::endl;
             cleanup();
  AudioManager::cleanup();
      exit(0);
