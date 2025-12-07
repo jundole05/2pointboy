@@ -22,7 +22,7 @@ const float LobbyScreen::EXIT_BTN_Y = 0.0f;
 void LobbyScreen::init()
 {
     isInLobby = true;
-    loadTexture("mainscreen.png");
+    loadTexture("main.png");
     
     // 로비 배경음악 재생
     AudioManager::playBackgroundMusicSimple(L"lobby.wav");
@@ -88,20 +88,20 @@ void LobbyScreen::draw()
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, backgroundTexture);
 
-    glColor3f(1.0f, 1.0f, 1.0f);
- glBegin(GL_QUADS);
- glTexCoord2f(0.0f, 0.0f); glVertex2f(0, 0);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f((float)windowWidth, 0);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f((float)windowWidth, (float)windowHeight);
-      glTexCoord2f(0.0f, 1.0f); glVertex2f(0, (float)windowHeight);
- glEnd();
+        glColor3f(1.0f, 1.0f, 1.0f);
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(0, 0);  // 좌하단
+        glTexCoord2f(1.0f, 1.0f); glVertex2f((float)windowWidth, 0);  // 우하단
+        glTexCoord2f(1.0f, 0.0f); glVertex2f((float)windowWidth, (float)windowHeight);  // 우상단
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(0, (float)windowHeight);  // 좌상단
+        glEnd();
 
         glDisable(GL_TEXTURE_2D);
     }
     else
     {
         // 배경 이미지 로드 실패 시 검은 배경
-      glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
   // 블렌딩 활성화 (버튼 그리기 전)

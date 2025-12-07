@@ -8,6 +8,7 @@ public:
     static bool isInGameOver;
     static int finalScore;
     static int finalTime;
+    static GLuint backgroundTexture;  // 배경 텍스처 추가
 
     static void init(int score, int time);
     static void draw();
@@ -15,6 +16,7 @@ public:
     static void cleanup();
 
 private:
+    static bool loadTexture(const char* filename);  // 텍스처 로드 함수 추가
     static void drawButton(float x, float y, float width, float height, const char* text);
     static bool isMouseInButton(int mouseX, int mouseY, float btnX, float btnY, float btnWidth, float btnHeight);
     static void drawText(float x, float y, const char* text, void* font);
