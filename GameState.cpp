@@ -262,67 +262,65 @@ void GameState::killBlock()
     int t = 1;
     for (int z = 0; z < 12; ++z)
     {
-        t = 1;
+     t = 1;
         for (int x = 0; x < 12; ++x)
         {
-            for (int y = 0; y < 12; ++y)
-            {
-                if (tempSpace[x][y][z] == 0)
-                {
-                    t = 0;
-                }
+         for (int y = 0; y < 12; ++y)
+  {
+     if (tempSpace[x][y][z] == 0)
+       {
+  t = 0;
+  }
             }
         }
         if (t)
         {
-            target = z;
-            break;
-        }
+        target = z;
+      break;
+     }
     }
 
     if (target != -1)
     {
         // 효과음 재생 (줄 완성 시)
         AudioManager::playSoundEffectSimple(L"complete.wav");
-        
+  
         // 점수 추가 (한 줄 완성시 10점)
         score += 10;
 
         out[target] = 1;
         for (int x = 0; x < 12; ++x)
         {
-            for (int y = 0; y < 12; ++y)
-            {
-                outSpace[x][target][y] = tempSpace[x][y][target];
-                printf("%d ", outSpace[x][y][target]);
-            }
-            printf("\n");
+          for (int y = 0; y < 12; ++y)
+       {
+     outSpace[x][target][y] = tempSpace[x][y][target];
+ }
         }
 
         for (int z = target; z < 11; ++z)
         {
             for (int x = 0; x < 12; ++x)
-            {
-                for (int y = 0; y < 12; ++y)
-                {
-                    int temp;
-                    temp = tempSpace[x][y][z];
-                    tempSpace[x][y][z] = tempSpace[x][y][z + 1];
-                    tempSpace[x][y][z + 1] = temp;
-                }
-            }
-        }
+    {
+    for (int y = 0; y < 12; ++y)
+    {
+   int temp;
+    temp = tempSpace[x][y][z];
+       tempSpace[x][y][z] = tempSpace[x][y][z + 1];
+        tempSpace[x][y][z + 1] = temp;
+    }
+     }
+      }
 
         for (int x = 0; x < 12; ++x)
         {
-            for (int y = 0; y < 12; ++y)
-            {
-                tempSpace[x][y][11] = 0;
+    for (int y = 0; y < 12; ++y)
+    {
+       tempSpace[x][y][11] = 0;
             }
         }
 
-        if (frames_needed > 15)
-            frames_needed -= 1;
+  if (frames_needed > 15)
+         frames_needed -= 1;
     }
 }
 
