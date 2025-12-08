@@ -211,53 +211,31 @@ void AudioManager::playBackgroundMusicSimple(const std::wstring& filename)
     // 기존 배경음악 정지 (PlaySound 방식만)
     PlaySound(NULL, NULL, 0);
   
- // MCI로 기존 배경음악 정지
+    // MCI로 기존 배경음악 정지
     if (!currentMusic.empty())
     {
-      std::wstring stopCmd = L"stop " + currentMusic;
-        mciSendString(stopCmd.c_str(), NULL, 0, NULL);
+        std::wstring stopCmd = L"stop " + currentMusic;
+      mciSendString(stopCmd.c_str(), NULL, 0, NULL);
         std::wstring closeCmd = L"close " + currentMusic;
- mciSendString(closeCmd.c_str(), NULL, 0, NULL);
+     mciSendString(closeCmd.c_str(), NULL, 0, NULL);
         currentMusic = L"";
-    }
+  }
     
     // 파일 존재 확인
     FILE* testFile = nullptr;
-  _wfopen_s(&testFile, filename.c_str(), L"rb");
-    if (!testFile)
-    {
+ _wfopen_s(&testFile, filename.c_str(), L"rb");
+ if (!testFile)
+{
         return;
     }
     fclose(testFile);
     
-    // MCI를 사용하여 배경음악 재생
-    std::wstring alias = L"bgmusic";
-    std::wstring openCmd = L"open \"" + filename + L"\" type waveaudio alias " + alias;
-    MCIERROR error = mciSendString(openCmd.c_str(), NULL, 0, NULL);
-    
-    if (error != 0)
+    // PlaySound로 간단하게 반복 재생 (가장 확실한 방법)
+    BOOL result = PlaySound(filename.c_str(), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+  
+    if (result)
     {
-    return;
-}
-    
-    // 볼륨 설정
-  std::wstring volumeCmd = L"setaudio " + alias + L" volume to 1000";
-    mciSendString(volumeCmd.c_str(), NULL, 0, NULL);
-    
-    // 반복 재생
-    std::wstring playCmd = L"play " + alias + L" repeat";
-    error = mciSendString(playCmd.c_str(), NULL, 0, NULL);
-    
-    if (error != 0)
-    {
-        // 반복 없이 시도
-        playCmd = L"play " + alias;
-        error = mciSendString(playCmd.c_str(), NULL, 0, NULL);
-    }
-    
-    if (error == 0)
-    {
-        currentMusic = alias;
+        currentMusic = L"playsound_bg";  // PlaySound 사용 중임을 표시
     }
 }
 
@@ -266,13 +244,13 @@ void AudioManager::playGameOverMusicSimple(const std::wstring& filename)
 {
     // 기존 배경음악 정지
     PlaySound(NULL, NULL, 0);
-    
+ 
     if (!currentMusic.empty())
     {
-    std::wstring stopCmd = L"stop " + currentMusic;
+        std::wstring stopCmd = L"stop " + currentMusic;
         mciSendString(stopCmd.c_str(), NULL, 0, NULL);
-     std::wstring closeCmd = L"close " + currentMusic;
-    mciSendString(closeCmd.c_str(), NULL, 0, NULL);
+        std::wstring closeCmd = L"close " + currentMusic;
+        mciSendString(closeCmd.c_str(), NULL, 0, NULL);
         currentMusic = L"";
     }
     
@@ -280,43 +258,28 @@ void AudioManager::playGameOverMusicSimple(const std::wstring& filename)
     
     // 파일 존재 확인
     FILE* testFile = nullptr;
-  _wfopen_s(&testFile, filename.c_str(), L"rb");
-    if (!testFile)
-    {
-     return;
-    }
-    fclose(testFile);
-
-    // MCI를 사용하여 게임 오버 음악 재생
-    std::wstring alias = L"gameovermusic";
-    std::wstring openCmd = L"open \"" + filename + L"\" type waveaudio alias " + alias;
-MCIERROR error = mciSendString(openCmd.c_str(), NULL, 0, NULL);
-    
-    if (error != 0)
+    _wfopen_s(&testFile, filename.c_str(), L"rb");
+  if (!testFile)
     {
         return;
     }
+  fclose(testFile);
+
+    // PlaySound로 한 번만 재생
+    BOOL result = PlaySound(filename.c_str(), NULL, SND_FILENAME | SND_ASYNC);
     
-    // 볼륨 설정
-    std::wstring volumeCmd = L"setaudio " + alias + L" volume to 1000";
-    mciSendString(volumeCmd.c_str(), NULL, 0, NULL);
-    
-  // 한 번만 재생
-    std::wstring playCmd = L"play " + alias;
-    error = mciSendString(playCmd.c_str(), NULL, 0, NULL);
-    
-    if (error == 0)
+    if (result)
     {
-        currentMusic = alias;
+      currentMusic = L"playsound_go";
     }
 }
 
 // 효과음 재생 (배경음악과 별개로 재생 - MCI 사용)
 void AudioManager::playSoundEffectSimple(const std::wstring& filename)
 {
-    // 현재 작업 디렉토리 확인
+  // 현재 작업 디렉토리 확인
     wchar_t currentDir[MAX_PATH];
-    GetCurrentDirectoryW(MAX_PATH, currentDir);
+  GetCurrentDirectoryW(MAX_PATH, currentDir);
   
     // 파일 존재 확인 및 절대 경로 생성
     std::wstring fullPath = filename;
@@ -325,15 +288,15 @@ void AudioManager::playSoundEffectSimple(const std::wstring& filename)
     
     if (!testFile)
     {
-        // 상대 경로로 실패하면 절대 경로 시도
-        fullPath = std::wstring(currentDir) + L"\\" + filename;
+    // 상대 경로로 실패하면 절대 경로 시도
+      fullPath = std::wstring(currentDir) + L"\\" + filename;
         _wfopen_s(&testFile, fullPath.c_str(), L"rb");
         
         if (!testFile)
         {
             return;
         }
-    }
+  }
     fclose(testFile);
     
     // MCI를 사용하여 효과음 재생 (배경음악과 완전히 분리)
@@ -348,21 +311,21 @@ void AudioManager::playSoundEffectSimple(const std::wstring& filename)
     
     if (error != 0)
     {
-     return;
+        return;
     }
-    
+ 
     // 2. 볼륨 설정
     std::wstring volumeCmd = L"setaudio " + alias + L" volume to 1000";
     mciSendString(volumeCmd.c_str(), NULL, 0, NULL);
     
- // 3. 효과음 재생
+    // 3. 효과음 재생
     std::wstring playCmd = L"play " + alias;
     error = mciSendString(playCmd.c_str(), NULL, 0, NULL);
     
     if (error != 0)
     {
-   // 실패 시 닫기
-      std::wstring closeCmd = L"close " + alias;
+        // 실패 시 닫기
+std::wstring closeCmd = L"close " + alias;
         mciSendString(closeCmd.c_str(), NULL, 0, NULL);
         return;
     }
