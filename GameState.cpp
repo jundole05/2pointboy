@@ -49,41 +49,25 @@ int GameState::nextBlock[3][3][3] = { 0 };
 void GameState::initGame()
 {
     // 게임 공간 지우기
-    for (int i = 0; i < 12; ++i)
+  for (int i = 0; i < 12; ++i)
+    {
+        for (int j = 0; j < 12; ++j)
   {
-      for (int j = 0; j < 12; ++j)
-      {
-            for (int k = 0; k < 12; ++k)
-  {
-           GameSpace[i][j][k] = 0;
-     tempSpace[i][j][k] = 0;
-  blockSpace[i][j][k] = 0;
-                previewSpace[i][j][k] = 0;
-            outSpace[i][j][k] = 0;
-    }
-        }
+      for (int k = 0; k < 12; ++k)
+         {
+    GameSpace[i][j][k] = 0;
+         tempSpace[i][j][k] = 0;
+     blockSpace[i][j][k] = 0;
+          previewSpace[i][j][k] = 0;
+   outSpace[i][j][k] = 0;
+            }
+      }
         out[i] = 0;
-    }
+}
 
     srand((unsigned int)time(NULL));
-    int bound = rand() % 2;
-  for (int z = 2; z >= 0; --z)
-    {
-    for (int tx = -bound; tx < bound; ++tx)
-        {
-            int x = tx;
-            if (x < 0)
-  {
-          x += 12;
-   }
-  for (int ty = 0; ty < 12; ++ty)
-   {
-       tempSpace[x][ty][z] = z + 1;
-      tempSpace[ty][x][z] = z + 1;
-        }
-   }
-        bound += rand() % 2 + 1;
-    }
+    
+    // 초기 타일 생성 코드 제거 (bound 관련 코드 삭제)
     
     quit = 0;
     bye = 0;
@@ -94,20 +78,20 @@ void GameState::initGame()
     myX = 5;
     myY = 5;
     myZ = 9;
-    cheat = -1;
+ cheat = -1;
 
     // 다음 블럭 미리 생성
     nextBlockID = rand() % 5 + 1;
-    Block::copyBlock(Block::getBlockByID(nextBlockID), nextBlock);
+  Block::copyBlock(Block::getBlockByID(nextBlockID), nextBlock);
 
     // 시간과 점수 초기화
-  gameTime = 0;
-    score = 0;
-timeFrameCount = 0;
+    gameTime = 0;
+score = 0;
+    timeFrameCount = 0;
     
     // 게임 오버 플래그 초기화
     gameOverDelay = 0;
-    isGameOverPlaying = false;
+  isGameOverPlaying = false;
 }
 
 void GameState::spawnNewBlock()
